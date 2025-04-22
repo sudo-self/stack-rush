@@ -15,9 +15,9 @@ interface File {
 
 function App() {
   const [files, setFiles] = useState<File[]>([
-    { name: 'index.html', content: '<div class="hello">Hello World</div>', type: 'html' },
+    { name: 'index.html', content: '<div class="hello">Welcome to Stack Rush by JR!</div>', type: 'html' },
     { name: 'styles.css', content: '.hello { color: blue; }', type: 'css' },
-    { name: 'script.js', content: 'console.log("Hello from JS!");', type: 'js' }
+    { name: 'script.js', content: 'console.log("stack-rush from JS!");', type: 'js' }
   ]);
   
   const [activeFile, setActiveFile] = useState<File>(files[0]);
@@ -35,17 +35,18 @@ function App() {
     const js = files.find(f => f.type === 'js')?.content || '';
     
     const combinedContent = `
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <style>${css}</style>
-        </head>
-        <body>
-          ${html}
-          <script>${js}</script>
-        </body>
-      </html>
-    `;
+        <!DOCTYPE html>
+        <html>
+          <head>
+           <script src="https://cdn.tailwindcss.com"></script>
+            <style>${css}</style>
+          </head>
+          <body>
+            ${html}
+            <script>${js}</script>
+          </body>
+        </html>
+      `;
     
     setPreview(combinedContent);
   }, [files]);
@@ -82,7 +83,7 @@ function App() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'codepen-clone-project.zip';
+    a.download = 'MyWebsite.zip';
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -91,7 +92,7 @@ function App() {
     const code = `<iframe 
   src="${window.location.href}"
   style="width: 100%; height: 500px; border: 0; border-radius: 4px; overflow: hidden;"
-  title="CodePen Clone"
+  title="stack-rush"
   loading="lazy"
 ></iframe>`;
     setEmbedCode(code);
@@ -141,59 +142,77 @@ function App() {
     }
   }, []);
 
-  return (
-    <div className="app-container">
-      <SplitPane split="vertical" sizes={sizes} onChange={setSizes}>
-        <div className="files-panel">
-          <h2>
-            Files
-            <button 
-              className="new-file-button" 
-              onClick={() => setShowNewFileModal(true)}
-              title="Create new file"
-            >
-              +
-            </button>
-          </h2>
-          {files.map(file => (
-            <div
-              key={file.name}
-              className={`file-item ${file.name === activeFile.name ? 'active' : ''}`}
-              onClick={() => setActiveFile(file)}
-            >
-              {file.name}
-            </div>
-          ))}
-        </div>
-        <div className="editor-panel">
-          <Editor
-            height="100%"
-            defaultLanguage={activeFile.type}
-            value={activeFile.content}
-            onChange={handleFileChange}
-            theme="vs-dark"
-            options={{
-              minimap: { enabled: false },
-              fontSize: 14,
-              wordWrap: 'on'
-            }}
-          />
-        </div>
-        <div className="preview-panel">
-          <div className="button-panel">
-            <button className="action-button" onClick={handleShare}>Share</button>
-            <button className="action-button" onClick={handleExport}>Export</button>
-            <button className="action-button" onClick={handleEmbed}>Embed</button>
+    return (
+      <div className="app-container">
+        <SplitPane
+          split="vertical"
+          sizes={sizes}
+          onChange={setSizes}
+            sashRender={(_, active) => (
+              <div
+                style={{
+                  width: '4px',
+                  background: active ? '#007bff' : '#ccc',
+                  cursor: 'col-resize'
+                }}
+              />
+            )}
+
+        >
+          <div className="files-panel">
+            <h2>
+              Files
+              <button
+                className="new-file-button"
+                onClick={() => setShowNewFileModal(true)}
+                title="Add New File"
+              >
+                +
+              </button>
+            </h2>
+            {files.map(file => (
+              <div
+                key={file.name}
+                className={`file-item ${file.name === activeFile.name ? 'active' : ''}`}
+                onClick={() => setActiveFile(file)}
+              >
+                {file.name}
+              </div>
+            ))}
           </div>
-          <iframe
-            srcDoc={preview}
-            title="preview"
-            sandbox="allow-scripts"
-            width="100%"
-            height="100%"
-          />
-        </div>
-      </SplitPane>
+          <div className="editor-panel">
+            <Editor
+              height="100%"
+              defaultLanguage={activeFile.type}
+              value={activeFile.content}
+              onChange={handleFileChange}
+              theme="vs-dark"
+              options={{
+                minimap: { enabled: false },
+                fontSize: 14,
+                wordWrap: 'on',
+                padding: {
+                  top: 30,
+                },
+              }}
+            />
+
+          </div>
+          <div className="preview-panel">
+            <div className="button-panel">
+              <button className="action-button" onClick={handleShare}>Share</button>
+              <button className="action-button" onClick={handleExport}>Export</button>
+              <button className="action-button" onClick={handleEmbed}>Embed</button>
+            </div>
+            <iframe
+              srcDoc={preview}
+              title="preview"
+              sandbox="allow-scripts"
+              width="100%"
+              height="100%"
+            />
+          </div>
+        </SplitPane>
 
       {showEmbedModal && (
         <div className="modal-overlay" onClick={() => setShowEmbedModal(false)}>
@@ -204,7 +223,7 @@ function App() {
             </div>
             <div className="embed-code">{embedCode}</div>
             <button className="copy-button" onClick={handleCopyEmbed}>
-              Copy Embed Code
+              Copy
             </button>
           </div>
         </div>
@@ -214,13 +233,13 @@ function App() {
         <div className="modal-overlay" onClick={() => setShowNewFileModal(false)}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>
             <div className="modal-header">
-              <h2>Create New File</h2>
+              <h2>Add New</h2>
               <button className="modal-close" onClick={() => setShowNewFileModal(false)}>×</button>
             </div>
             <div className="new-file-form">
               <input
                 type="text"
-                placeholder="File name"
+                placeholder="name"
                 value={newFileName}
                 onChange={(e) => setNewFileName(e.target.value)}
               />
@@ -233,7 +252,7 @@ function App() {
                 <option value="js">JavaScript</option>
               </select>
               <div className="form-buttons">
-                <button className="action-button" onClick={handleCreateFile}>Create</button>
+                <button className="action-button" onClick={handleCreateFile}>Add</button>
                 <button className="action-button" onClick={() => setShowNewFileModal(false)}>Cancel</button>
               </div>
             </div>
@@ -245,3 +264,5 @@ function App() {
 }
 
 export default App;
+
+
