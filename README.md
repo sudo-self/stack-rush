@@ -2,7 +2,8 @@
 
 Site Rush is a fast, in-browser code editor that lets you create, preview, export, share, and embed full-stack web snippets (HTML, CSS, JS) in real time — all with a smooth developer experience powered by Monaco Editor, JSZip, and Tailwind CSS.
 
-![Site Rush Screenshot](./screenshot.png)
+![og](https://github.com/user-attachments/assets/49c9403f-29af-4d54-b0bf-49026802f417)
+
 
 ## 🧩 Features
 
@@ -32,8 +33,6 @@ Site Rush is a fast, in-browser code editor that lets you create, preview, expor
 
 ```
 
-
-```
 
 📁 src
  ┣ 📄 App.tsx              # Main app logic
