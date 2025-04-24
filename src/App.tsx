@@ -318,7 +318,7 @@ function App() {
             </button>
 
           <img
-            src="./src/assets/react.svg"
+            src="/react.svg"
             alt="React Logo"
             style={{
               width: "30px",
@@ -327,7 +327,7 @@ function App() {
             }}
           />
           <img
-            src="./src/assets/typescript.svg"
+            src="/typescript.svg"
             alt="TypeScript Logo"
             style={{
               width: "30px",
@@ -335,7 +335,6 @@ function App() {
               verticalAlign: "middle",
             }}
           />
-
           </div>
             <iframe
               srcDoc={preview}
@@ -383,3 +382,7 @@ function App() {
 }
 
 export default App;
+
+
+
+<img src="/typescript.svg" alt="TypeScript Logo" style={{ width: "30px", marginLeft: "10px" }} />
