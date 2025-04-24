@@ -1,8 +1,11 @@
 # 🚀 Welcome to Site Rush!
+### <a href="https://stack-rush.vercel.app/">start coding!</a>
 
 Site Rush is a fast, in-browser code editor that lets you create, preview, export, share, and embed full-stack web snippets (HTML, CSS, JS) in real time — all with a smooth developer experience powered by Monaco Editor, JSZip, and Tailwind CSS.
 
-![og](https://github.com/user-attachments/assets/49c9403f-29af-4d54-b0bf-49026802f417)
+<img width="1440" alt="Screenshot 2025-04-24 at 00 28 24" src="https://github.com/user-attachments/assets/cc0334d5-df77-4416-aca8-d32c6b9f235a" />
+<img width="1440" alt="Screenshot 2025-04-24 at 00 28 51" src="https://github.com/user-attachments/assets/658889f2-08bb-4705-ba54-999c660159c3" />
+
 
 
 ## 🧩 Features
@@ -21,24 +24,25 @@ Site Rush is a fast, in-browser code editor that lets you create, preview, expor
 - Monaco Editor
 - Split Pane React
 - JSZip
-- Tailwind CSS (via CDN)
-- Vite (or CRA, depending on your setup)
+- Tailwind CSS
+- Vite
 
-## 🧰 Getting Started
+## 🧰 Dev
 
-1. Clone the repository:
+Clone the repository
    ```bash
    git clone https://github.com/your-username/site-rush.git
    cd site-rush
-
+   npm i
+   npm run dev
 ```
 
-
+```
 📁 src
- ┣ 📄 App.tsx              # Main app logic
- ┣ 📄 App.css              # Styles for panels, modals, buttons
- ┣ 📄 ToastContext.tsx     # Toast notifications (optional)
- ┗ 📄 main.tsx             # Entry point
+ ┣ 📄 App.tsx              # app
+ ┣ 📄 App.css              # Style 
+ ┣ 📄 Components.tsx       # Add-ins
+ ┗ 📄 main.tsx             # Entry
 
 
 ```
