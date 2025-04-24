@@ -7,8 +7,10 @@ import './App.css';
 import { marked } from 'marked';
 import { FaHtml5, FaCss3Alt, FaJsSquare, FaMarkdown } from 'react-icons/fa';
 
+// File types
 type FileType = 'html' | 'css' | 'js' | 'md';
 
+// File interface
 interface File {
   name: string;
   content: string;
@@ -20,20 +22,18 @@ function App() {
     { name: 'index.html', content: '<div class="hello">Welcome to Stack Rush by JR!</div>', type: 'html' },
     { name: 'styles.css', content: '.hello { color: blue; }', type: 'css' },
     { name: 'script.js', content: 'console.log("stack-rush from JS!");', type: 'js' },
-    { name: 'README.md', content: '# Project\n\nExport ZIP for a ready-to-deploy website!', type: 'md' },
+    { name: 'README.md', content: '\n\n# Export ZIP for a ready-to-deploy website!', type: 'md' },
   ]);
   const [activeFile, setActiveFile] = useState<File>(files[0]);
   const [sizes, setSizes] = useState<number[]>([20, 40, 40]);
   const [preview, setPreview] = useState<string>('');
   const [showEmbedModal, setShowEmbedModal] = useState(false);
   const [embedCode, setEmbedCode] = useState('');
-  const [showNewFileModal, setShowNewFileModal] = useState(false);
-  const [newFileName, setNewFileName] = useState('');
-  const [newFileType, setNewFileType] = useState<FileType>('html');
-  const [theme, setTheme] = useState('vs-dark');
   const [renameFile, setRenameFile] = useState<string | null>(null);
   const [newFileNameForRename, setNewFileNameForRename] = useState<string>('');
+  const [theme, setTheme] = useState('vs-dark');
 
+  // File update on active file change
   useEffect(() => {
     const html = files.find(f => f.type === 'html')?.content || '';
     const css = files.find(f => f.type === 'css')?.content || '';
@@ -80,6 +80,7 @@ function App() {
     setPreview(combined);
   }, [files, activeFile]);
 
+  // File type icon
   const getFileIcon = (type: FileType) => {
     switch (type) {
       case 'html': return <FaHtml5 />;
@@ -90,6 +91,7 @@ function App() {
     }
   };
 
+  // Handle file change in editor
   const handleFileChange = (value: string | undefined) => {
     if (!value) return;
     setFiles(files.map(file =>
@@ -97,24 +99,28 @@ function App() {
     ));
   };
 
+  // Handle file sharing
   const handleShare = () => {
     const encoded = encodeURIComponent(JSON.stringify({ files }));
     const url = `${window.location.origin}${window.location.pathname}?project=${encoded}`;
     navigator.clipboard.writeText(url).then(() => alert('Share URL copied!'));
   };
 
+  // Delete file
   const handleDeleteFile = (fileName: string) => {
     const updated = files.filter(f => f.name !== fileName);
     setFiles(updated);
     if (activeFile.name === fileName) setActiveFile(updated[0] || files[0]);
   };
 
+  // Handle file renaming
   const handleRenameFile = (fileName: string) => {
     setRenameFile(fileName);
     const fileToRename = files.find(f => f.name === fileName);
     if (fileToRename) setNewFileNameForRename(fileToRename.name);
   };
 
+  // Save renamed file
   const handleSaveRename = () => {
     if (!newFileNameForRename.trim()) return;
     setFiles(files.map(file =>
@@ -123,6 +129,7 @@ function App() {
     setRenameFile(null);
   };
 
+  // Export files as ZIP
   const handleExport = async () => {
     const zip = new JSZip();
     files.forEach(f => zip.file(f.name, f.content));
@@ -135,6 +142,7 @@ function App() {
     URL.revokeObjectURL(url);
   };
 
+  // Handle embed code generation
   const handleEmbed = () => {
     const code = `<iframe 
   src="${window.location.href}"
@@ -146,17 +154,7 @@ function App() {
     setShowEmbedModal(true);
   };
 
-  const handleCreateFile = () => {
-    if (!newFileName) return;
-    const ext = newFileType === 'html' ? '.html' : newFileType === 'css' ? '.css' : newFileType === 'js' ? '.js' : '.md';
-    const fullName = newFileName.endsWith(ext) ? newFileName : `${newFileName}${ext}`;
-    const newFile: File = { name: fullName, content: '', type: newFileType };
-    setFiles([...files, newFile]);
-    setActiveFile(newFile);
-    setShowNewFileModal(false);
-    setNewFileName('');
-  };
-
+  // Handle URL project loading from query params
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const project = params.get('project');
@@ -171,6 +169,11 @@ function App() {
     }
   }, []);
 
+  // Add sashRender prop
+  const sashRender = (_index: number, active: boolean) => {
+    return <div className={`sash ${active ? 'active' : ''}`} />;
+  };
+
   return (
     <div className="app-container">
       <div className="theme-switcher" style={{ padding: '8px', textAlign: 'right' }}>
@@ -181,12 +184,9 @@ function App() {
         </select>
       </div>
 
-      <SplitPane split="vertical" sizes={sizes} onChange={setSizes}>
+      <SplitPane split="vertical" sizes={sizes} onChange={setSizes} sashRender={sashRender}>
         <div className="files-panel">
-          <h2>
-            Project Files
-            <button className="new-file-button" onClick={() => setShowNewFileModal(true)}>+</button>
-          </h2>
+          <h2>Project Files</h2>
           {files.map(file => (
             <div
               key={file.name}
@@ -217,7 +217,7 @@ function App() {
           ))}
         </div>
 
-        <SplitPane split="vertical" sizes={[60, 40]}>
+        <SplitPane split="vertical" sizes={[60, 40]} onChange={setSizes} sashRender={sashRender}>
           <div className="editor-panel">
             <Editor
               height="100%"
@@ -250,50 +250,18 @@ function App() {
         </SplitPane>
       </SplitPane>
 
-      <footer style={{ textAlign: 'center', padding: '12px', fontSize: '14px' }}>
-        <a href="https://stack-rush.vercel.app" target="_blank" rel="noopener noreferrer">
-          web.JesseJesse.com
-        </a>
-      </footer>
-
-      {showNewFileModal && (
-        <div className="modal">
-          <div className="modal-content">
-            <h2>Create New File</h2>
-            <input
-              type="text"
-              value={newFileName}
-              onChange={(e) => setNewFileName(e.target.value)}
-              placeholder="Enter file name"
-            />
-            <select value={newFileType} onChange={(e) => setNewFileType(e.target.value as FileType)}>
-              <option value="html">HTML</option>
-              <option value="css">CSS</option>
-              <option value="js">JavaScript</option>
-              <option value="md">Markdown</option>
-            </select>
-            <div className="button-container">
-              <button onClick={handleCreateFile}>Create</button>
-              <button onClick={() => setShowNewFileModal(false)}>Cancel</button>
-            </div>
-          </div>
-        </div>
-      )}
-
       {showEmbedModal && (
-        <div className="modal">
+        <div className="modal-overlay">
           <div className="modal-content">
             <h2>Embed Code</h2>
-            <textarea rows={4} value={embedCode} readOnly />
-            <button onClick={() => setShowEmbedModal(false)}>Close</button>
-            <button
-              onClick={() => {
-                navigator.clipboard.writeText(embedCode);
-                alert('Embed code copied to clipboard!');
-              }}
-            >
-              Copy
-            </button>
+            <textarea
+              readOnly
+              value={embedCode}
+              style={{ width: '100%', height: '150px', padding: '8px', borderRadius: '4px', fontFamily: 'monospace' }}
+            />
+            <div className="button-container">
+              <button onClick={() => setShowEmbedModal(false)}>Close</button>
+            </div>
           </div>
         </div>
       )}
