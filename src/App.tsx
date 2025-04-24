@@ -23,13 +23,13 @@ function App() {
   const [files, setFiles] = useState<File[]>([
     {
       name: "index.html",
-      content: '<div class="hello">Welcome to stack-rush!</div>',
+      content: '<div class="hello">Welcome to web.JesseJesse.com!</div>',
       type: "html",
     },
     { name: "styles.css", content: ".hello { color: blue; }", type: "css" },
     {
       name: "script.js",
-      content: 'console.log("stack-rush from JS!");',
+      content: 'console.log("web.JesseJesse.com");',
       type: "js",
     },
     {
@@ -171,14 +171,14 @@ function App() {
       const encoded = encodeURIComponent(JSON.stringify({ files }));
       const projectUrl = `${window.location.origin}${window.location.pathname}?project=${encoded}`;
 
-      const code = `<!-- stack-rush.vercel.app -->
+      const code = `<!-- web.JesseJesse.com -->
       <iframe 
         src="${projectUrl}"
         style="width: 100%; height: 500px; border: 0; border-radius: 4px; overflow: hidden;"
         title="stack-rush"
         loading="lazy"
       ></iframe>
-      <!-- stack-rush.vercel.app -->`;
+      <!-- web.JesseJesse.com -->`;
       
       setEmbedCode(code);
       setShowEmbedModal(true);
