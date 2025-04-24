@@ -160,19 +160,26 @@ function App() {
     a.click();
     URL.revokeObjectURL(url);
   };
+    
+    const handleEmbed = () => {
+   
+      const encoded = encodeURIComponent(JSON.stringify({ files }));
+      const projectUrl = `${window.location.origin}${window.location.pathname}?project=${encoded}`;
 
-  const handleEmbed = () => {
-    const code = `<!-- stack-rush.vercel.app -->
-<iframe 
-  src="${window.location.href}"
-  style="width: 100%; height: 500px; border: 0; border-radius: 4px; overflow: hidden;"
-  title="stack-rush"
-  loading="lazy"
-></iframe>
-<!-- stack-rush.vercel.app -->`;
-    setEmbedCode(code);
-    setShowEmbedModal(true);
-  };
+      const code = `<!-- stack-rush.vercel.app -->
+      <iframe 
+        src="${projectUrl}"
+        style="width: 100%; height: 500px; border: 0; border-radius: 4px; overflow: hidden;"
+        title="stack-rush"
+        loading="lazy"
+      ></iframe>
+      <!-- stack-rush.vercel.app -->`;
+      
+      setEmbedCode(code);
+      setShowEmbedModal(true);
+    };
+
+
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
