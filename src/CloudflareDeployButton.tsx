@@ -31,6 +31,9 @@ const CloudflareDeployButton: React.FC<CloudflareDeployButtonProps> = ({ onClose
     navigator.clipboard.writeText(embedCode);
     alert('Embed code copied to clipboard!');
   };
+    
+
+
 
   return (
     <div className="modal">
