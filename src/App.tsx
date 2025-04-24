@@ -199,16 +199,15 @@ function App() {
               padding: "8px",
             }}
           >
-            <a
-              className="github-button"
-              href="https://github.com/sudo-self/stack-rush"
-              data-color-scheme="no-preference: light; light: light; dark: light_high_contrast;"
-              data-icon="octicon-star"
-              data-show-count="false"
-              aria-label="Star sudo-self/stack-rush on GitHub"
-            >
-              Star
-            </a>
+          <img
+            src="/vite.svg"
+            alt="favicon"
+            style={{
+              width: "30px",
+              marginLeft: "10px",
+              verticalAlign: "middle",
+            }}
+          />
 
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
               <label style={{ fontWeight: "500" }}>stack-rush.vercel.app</label>
