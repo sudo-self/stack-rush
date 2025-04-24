@@ -27,7 +27,7 @@ Site Rush is a fast, in-browser code editor that lets you create, preview, expor
 - Tailwind CSS
 - Vite
 
-##  Dev
+## 🧰 Dev
 
 Clone the repository
    ```bash
@@ -36,7 +36,7 @@ Clone the repository
    npm i
    npm run dev
 ```
-🧰
+
 ```
 📁 src
  ┣ 📄 App.tsx              # app
