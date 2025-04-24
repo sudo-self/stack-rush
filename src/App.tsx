@@ -158,7 +158,7 @@ function App() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "MyWebsite.zip";
+    a.download = "Website.zip";
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -281,7 +281,7 @@ function App() {
             }}
           >
 
-            <h2>Project</h2>
+            <h2>Website Builder</h2>
           <div
             className="drag-drop-zone"
             style={{
@@ -294,7 +294,7 @@ function App() {
               transition: "background-color 0.2s ease",
             }}
           >
-            + Files
+            + Add Files
           </div>
 
             {files.map((file) => (
