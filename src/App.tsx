@@ -58,6 +58,7 @@ function App() {
       if (activeFile.type === "md") {
         combined = `
           <!DOCTYPE html>
+                <!-- stack-rush -->
           <html>
             <head>
               <meta charset="UTF-8" />
@@ -77,6 +78,7 @@ function App() {
       } else {
         combined = `
           <!DOCTYPE html>
+        <!-- stack-rush -->
           <html>
             <head>
               <meta charset="UTF-8" />
@@ -279,7 +281,7 @@ function App() {
             }}
           >
 
-            <h2>Project Files</h2>
+            <h2>Project</h2>
           <div
             className="drag-drop-zone"
             style={{
@@ -292,7 +294,7 @@ function App() {
               transition: "background-color 0.2s ease",
             }}
           >
-            Drop your files here
+            + Files
           </div>
 
             {files.map((file) => (
@@ -438,6 +440,8 @@ function App() {
         </div>
       )}
     </div>
+    
+
   );
 }
 
