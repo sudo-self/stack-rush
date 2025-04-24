@@ -23,7 +23,7 @@ function App() {
   const [files, setFiles] = useState<File[]>([
     {
       name: "index.html",
-      content: '<div class="hello">Welcome to web.JesseJesse.com!</div>',
+      content: '<div class="hello">web.JesseJesse.com</div>',
       type: "html",
     },
     { name: "styles.css", content: ".hello { color: blue; }", type: "css" },
@@ -34,7 +34,7 @@ function App() {
     },
     {
       name: "README.md",
-      content: "\n\n# Export ZIP for a ready-to-deploy website!",
+      content: "\n\n# Export ZIP for a ready-to-deploy website",
       type: "md",
     },
   ]);
@@ -226,7 +226,7 @@ function App() {
           />
 
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-              <label style={{ fontWeight: "500" }}>stack-rush.vercel.app</label>
+              <label style={{ fontWeight: "500" }}>web.JesseJesse.com</label>
               <select
                 value={theme}
                 onChange={(e) => setTheme(e.target.value)}
