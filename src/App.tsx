@@ -5,6 +5,7 @@ import JSZip from 'jszip';
 import 'split-pane-react/esm/themes/default.css';
 import './App.css';
 import { marked } from 'marked';
+import { FaHtml5, FaCss3Alt, FaJsSquare, FaMarkdown } from 'react-icons/fa';
 
 type FileType = 'html' | 'css' | 'js' | 'md';
 
@@ -19,9 +20,8 @@ function App() {
     { name: 'index.html', content: '<div class="hello">Welcome to Stack Rush by JR!</div>', type: 'html' },
     { name: 'styles.css', content: '.hello { color: blue; }', type: 'css' },
     { name: 'script.js', content: 'console.log("stack-rush from JS!");', type: 'js' },
-    { name: 'README.md', content: '# Stack Rush\n\nExport ZIP for a ready-to-deploy website!', type: 'md' },
+    { name: 'README.md', content: '# Project\n\nExport ZIP for a ready-to-deploy website!', type: 'md' },
   ]);
-
   const [activeFile, setActiveFile] = useState<File>(files[0]);
   const [sizes, setSizes] = useState<number[]>([20, 40, 40]);
   const [preview, setPreview] = useState<string>('');
@@ -79,6 +79,16 @@ function App() {
 
     setPreview(combined);
   }, [files, activeFile]);
+
+  const getFileIcon = (type: FileType) => {
+    switch (type) {
+      case 'html': return <FaHtml5 />;
+      case 'css': return <FaCss3Alt />;
+      case 'js': return <FaJsSquare />;
+      case 'md': return <FaMarkdown />;
+      default: return <span>?</span>;
+    }
+  };
 
   const handleFileChange = (value: string | undefined) => {
     if (!value) return;
@@ -164,37 +174,18 @@ function App() {
   return (
     <div className="app-container">
       <div className="theme-switcher" style={{ padding: '8px', textAlign: 'right' }}>
-        <label style={{ marginRight: '8px' }}>Welcome to Stack Rush!&nbsp;</label>
+        <label>Welcome to Stack Rush!&nbsp;</label>
         <select value={theme} onChange={(e) => setTheme(e.target.value)}>
           <option value="vs-dark">Dark</option>
           <option value="light">Light</option>
         </select>
       </div>
 
-      <SplitPane
-        split="vertical"
-        sizes={sizes}
-        onChange={setSizes}
-        sashRender={(_, active) => (
-          <div
-            style={{
-              width: '4px',
-              background: active ? '#007bff' : '#ccc',
-              cursor: 'col-resize'
-            }}
-          />
-        )}
-      >
+      <SplitPane split="vertical" sizes={sizes} onChange={setSizes}>
         <div className="files-panel">
           <h2>
             Project Files
-            <button
-              className="new-file-button"
-              onClick={() => setShowNewFileModal(true)}
-              title="Add New File"
-            >
-              +
-            </button>
+            <button className="new-file-button" onClick={() => setShowNewFileModal(true)}>+</button>
           </h2>
           {files.map(file => (
             <div
@@ -203,7 +194,7 @@ function App() {
               onClick={() => setActiveFile(file)}
             >
               {renameFile === file.name ? (
-                <div>
+                <div className="rename-input">
                   <input
                     type="text"
                     value={newFileNameForRename}
@@ -213,59 +204,58 @@ function App() {
                 </div>
               ) : (
                 <>
-                  {file.name}
-                  <button onClick={() => handleRenameFile(file.name)}>&nbsp;&nbsp;Rename</button>&nbsp;&nbsp;
-                  <button onClick={() => handleDeleteFile(file.name)}>&nbsp;&nbsp;Delete</button>
+                  <span className="file-name" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    {getFileIcon(file.type)} {file.name}
+                  </span>
+                  <div className="file-actions">
+                    <button onClick={() => handleRenameFile(file.name)} className="rename-btn">Rename</button>
+                    <button onClick={() => handleDeleteFile(file.name)} className="delete-btn">Delete</button>
+                  </div>
                 </>
               )}
             </div>
           ))}
         </div>
 
-        <div className="editor-panel">
-          <Editor
-            height="100%"
-            defaultLanguage={activeFile.type}
-            value={activeFile.content}
-            onChange={handleFileChange}
-            theme={theme}
-            options={{
-              minimap: { enabled: false },
-              fontSize: 14,
-              wordWrap: 'on',
-              padding: { top: 30 },
-            }}
-          />
-        </div>
-
-        <div className="preview-panel">
-          <div className="button-panel">
-            <button className="action-button" onClick={handleShare}>Share</button>
-            <button className="action-button" onClick={handleExport}>Export</button>
-            <button className="action-button" onClick={handleEmbed}>Embed</button>
+        <SplitPane split="vertical" sizes={[60, 40]}>
+          <div className="editor-panel">
+            <Editor
+              height="100%"
+              defaultLanguage={activeFile.type}
+              value={activeFile.content}
+              onChange={handleFileChange}
+              theme={theme}
+              options={{
+                minimap: { enabled: false },
+                fontSize: 14,
+                wordWrap: 'on',
+                padding: { top: 30 },
+              }}
+            />
           </div>
-          <iframe
-            srcDoc={preview}
-            title="preview"
-            sandbox="allow-scripts"
-            width="100%"
-            height="100%"
-          />
-        </div>
+          <div className="preview-panel">
+            <div className="button-panel">
+              <button className="action-button" onClick={handleShare}>Share</button>
+              <button className="action-button" onClick={handleExport}>Export</button>
+              <button className="action-button" onClick={handleEmbed}>Embed</button>
+            </div>
+            <iframe
+              srcDoc={preview}
+              title="preview"
+              sandbox="allow-scripts"
+              width="100%"
+              height="100%"
+            />
+          </div>
+        </SplitPane>
       </SplitPane>
 
       <footer style={{ textAlign: 'center', padding: '12px', fontSize: '14px' }}>
-        <a
-          href="https://stack-rush.vercel.app"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ color: 'inherit', textDecoration: 'none' }}
-        >
+        <a href="https://stack-rush.vercel.app" target="_blank" rel="noopener noreferrer">
           web.JesseJesse.com
         </a>
       </footer>
 
-      {/* Modal for creating a new file */}
       {showNewFileModal && (
         <div className="modal">
           <div className="modal-content">
@@ -276,32 +266,34 @@ function App() {
               onChange={(e) => setNewFileName(e.target.value)}
               placeholder="Enter file name"
             />
-            <select
-              value={newFileType}
-              onChange={(e) => setNewFileType(e.target.value as FileType)}
-            >
+            <select value={newFileType} onChange={(e) => setNewFileType(e.target.value as FileType)}>
               <option value="html">HTML</option>
               <option value="css">CSS</option>
               <option value="js">JavaScript</option>
               <option value="md">Markdown</option>
             </select>
-            <button onClick={handleCreateFile}>Create</button>
-            <button onClick={() => setShowNewFileModal(false)}>Cancel</button>
+            <div className="button-container">
+              <button onClick={handleCreateFile}>Create</button>
+              <button onClick={() => setShowNewFileModal(false)}>Cancel</button>
+            </div>
           </div>
         </div>
       )}
 
-      {/* Modal for embedding */}
       {showEmbedModal && (
         <div className="modal">
           <div className="modal-content">
             <h2>Embed Code</h2>
-            <textarea
-              rows={4}
-              value={embedCode}
-              readOnly
-            />
+            <textarea rows={4} value={embedCode} readOnly />
             <button onClick={() => setShowEmbedModal(false)}>Close</button>
+            <button
+              onClick={() => {
+                navigator.clipboard.writeText(embedCode);
+                alert('Embed code copied to clipboard!');
+              }}
+            >
+              Copy
+            </button>
           </div>
         </div>
       )}
@@ -310,8 +302,4 @@ function App() {
 }
 
 export default App;
-
-
-
-
 
