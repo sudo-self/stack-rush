@@ -44,6 +44,8 @@ function App() {
   const [renameFile, setRenameFile] = useState<string | null>(null);
   const [newFileNameForRename, setNewFileNameForRename] = useState<string>("");
   const [theme, setTheme] = useState("vs-dark");
+  const [isDragging, setIsDragging] = useState(false);
+
 
   useEffect(() => {
     const html = files.find((f) => f.type === "html")?.content || "";
@@ -234,54 +236,104 @@ function App() {
         onChange={setSizes}
         sashRender={sashRender}
       >
-        <div className="files-panel">
-          <h2>Project Files</h2>
-          {files.map((file) => (
-            <div
-              key={file.name}
-              className={`file-item ${file.name === activeFile.name ? "active" : ""}`}
-              onClick={() => setActiveFile(file)}
-            >
-              {renameFile === file.name ? (
-                <div className="rename-input">
-                  <input
-                    type="text"
-                    value={newFileNameForRename}
-                    onChange={(e) => setNewFileNameForRename(e.target.value)}
-                  />
-                  <button onClick={handleSaveRename}>Save</button>
-                </div>
-              ) : (
-                <>
-                  <span
-                    className="file-name"
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "8px",
-                    }}
-                  >
-                    {getFileIcon(file.type)} {file.name}
-                  </span>
-                  <div className="file-actions">
-                    <button
-                      onClick={() => handleRenameFile(file.name)}
-                      className="rename-btn"
-                    >
-                      Rename
-                    </button>
-                    <button
-                      onClick={() => handleDeleteFile(file.name)}
-                      className="delete-btn"
-                    >
-                      Delete
-                    </button>
+          <div
+            className={`files-panel ${isDragging ? "dragging" : ""}`}
+            onDragOver={(e) => {
+              e.preventDefault();
+              setIsDragging(true);
+            }}
+            onDragLeave={() => setIsDragging(false)}
+            onDrop={async (e) => {
+              e.preventDefault();
+              setIsDragging(false);
+              const droppedFiles = Array.from(e.dataTransfer.files);
+
+              for (const file of droppedFiles) {
+                const extension = file.name.split(".").pop()?.toLowerCase();
+                const type = extension as FileType;
+
+                if (!["html", "css", "js", "md"].includes(type)) {
+                  alert(`Unsupported file type: ${file.name}`);
+                  continue;
+                }
+
+                const text = await file.text();
+                setFiles((prev) => [
+                  ...prev,
+                  {
+                    name: file.name,
+                    content: text,
+                    type: type as FileType,
+                  },
+                ]);
+              }
+            }}
+          >
+
+            <h2>Project Files</h2>
+          <div
+            className="drag-drop-zone"
+            style={{
+              border: "2px dashed #999",
+              padding: "1rem",
+              marginBottom: "1rem",
+              textAlign: "center",
+              borderRadius: "8px",
+              backgroundColor: isDragging ? "#f0f0f0" : "transparent",
+              transition: "background-color 0.2s ease",
+            }}
+          >
+            Drop your files here
+          </div>
+
+            {files.map((file) => (
+              <div
+                key={file.name}
+                className={`file-item ${file.name === activeFile.name ? "active" : ""}`}
+                onClick={() => setActiveFile(file)}
+              >
+                {renameFile === file.name ? (
+                  <div className="rename-input">
+                    <input
+                      type="text"
+                      value={newFileNameForRename}
+                      onChange={(e) => setNewFileNameForRename(e.target.value)}
+                    />
+                    <button onClick={handleSaveRename}>Save</button>
                   </div>
-                </>
-              )}
-            </div>
-          ))}
-        </div>
+                ) : (
+                  <>
+                    <span
+                      className="file-name"
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "8px",
+                      }}
+                    >
+                      {getFileIcon(file.type)} {file.name}
+                    </span>
+                    <div className="file-actions">
+                      <button
+                        onClick={() => handleRenameFile(file.name)}
+                        className="rename-btn"
+                      >
+                        Rename
+                      </button>
+                      <button
+                        onClick={() => handleDeleteFile(file.name)}
+                        className="delete-btn"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
+            ))}
+          </div>
+          
+
 
         <SplitPane
           split="vertical"
@@ -383,5 +435,3 @@ function App() {
 export default App;
 
 
-
-<img src="/typescript.svg" alt="TypeScript Logo" style={{ width: "30px", marginLeft: "10px" }} />
