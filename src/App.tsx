@@ -7,6 +7,7 @@ import "./App.css";
 import { marked } from "marked";
 import { FaHtml5, FaCss3Alt, FaJsSquare, FaMarkdown } from "react-icons/fa";
 import CloudflareDeployButton from "./CloudflareDeployButton";
+import URLOpener from './URLopener';
 
 
 // types
@@ -299,6 +300,9 @@ function App() {
           >
             + Add Files
           </div>
+          <div>
+        
+          </div>
 
             {files.map((file) => (
               <div
@@ -345,9 +349,12 @@ function App() {
                 )}
               </div>
             ))}
+        
+          <URLOpener />
           </div>
           
-         
+  
+    
          
         <SplitPane
           split="vertical"
@@ -451,3 +458,5 @@ function App() {
 }
 
 export default App;
+
+
