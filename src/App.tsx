@@ -1,14 +1,14 @@
-import { useState, useEffect } from 'react';
-import Editor from '@monaco-editor/react';
-import SplitPane from 'split-pane-react';
-import JSZip from 'jszip';
-import 'split-pane-react/esm/themes/default.css';
-import './App.css';
-import { marked } from 'marked';
-import { FaHtml5, FaCss3Alt, FaJsSquare, FaMarkdown } from 'react-icons/fa';
+import { useState, useEffect } from "react";
+import Editor from "@monaco-editor/react";
+import SplitPane from "split-pane-react";
+import JSZip from "jszip";
+import "split-pane-react/esm/themes/default.css";
+import "./App.css";
+import { marked } from "marked";
+import { FaHtml5, FaCss3Alt, FaJsSquare, FaMarkdown } from "react-icons/fa";
 
 // File types
-type FileType = 'html' | 'css' | 'js' | 'md';
+type FileType = "html" | "css" | "js" | "md";
 
 // File interface
 interface File {
@@ -19,30 +19,41 @@ interface File {
 
 function App() {
   const [files, setFiles] = useState<File[]>([
-    { name: 'index.html', content: '<div class="hello">Welcome to Stack Rush by JR!</div>', type: 'html' },
-    { name: 'styles.css', content: '.hello { color: blue; }', type: 'css' },
-    { name: 'script.js', content: 'console.log("stack-rush from JS!");', type: 'js' },
-    { name: 'README.md', content: '\n\n# Export ZIP for a ready-to-deploy website!', type: 'md' },
+    {
+      name: "index.html",
+      content: '<div class="hello">Welcome to stack-rush!</div>',
+      type: "html",
+    },
+    { name: "styles.css", content: ".hello { color: blue; }", type: "css" },
+    {
+      name: "script.js",
+      content: 'console.log("stack-rush from JS!");',
+      type: "js",
+    },
+    {
+      name: "README.md",
+      content: "\n\n# Export ZIP for a ready-to-deploy website!",
+      type: "md",
+    },
   ]);
   const [activeFile, setActiveFile] = useState<File>(files[0]);
   const [sizes, setSizes] = useState<number[]>([20, 40, 40]);
-  const [preview, setPreview] = useState<string>('');
+  const [preview, setPreview] = useState<string>("");
   const [showEmbedModal, setShowEmbedModal] = useState(false);
-  const [embedCode, setEmbedCode] = useState('');
+  const [embedCode, setEmbedCode] = useState("");
   const [renameFile, setRenameFile] = useState<string | null>(null);
-  const [newFileNameForRename, setNewFileNameForRename] = useState<string>('');
-  const [theme, setTheme] = useState('vs-dark');
+  const [newFileNameForRename, setNewFileNameForRename] = useState<string>("");
+  const [theme, setTheme] = useState("vs-dark");
 
-  // File update on active file change
   useEffect(() => {
-    const html = files.find(f => f.type === 'html')?.content || '';
-    const css = files.find(f => f.type === 'css')?.content || '';
-    const js = files.find(f => f.type === 'js')?.content || '';
-    const md = files.find(f => f.type === 'md')?.content || '';
+    const html = files.find((f) => f.type === "html")?.content || "";
+    const css = files.find((f) => f.type === "css")?.content || "";
+    const js = files.find((f) => f.type === "js")?.content || "";
+    const md = files.find((f) => f.type === "md")?.content || "";
 
-    let combined = '';
+    let combined = "";
 
-    if (activeFile.type === 'md') {
+    if (activeFile.type === "md") {
       combined = `
         <!DOCTYPE html>
         <html>
@@ -80,117 +91,156 @@ function App() {
     setPreview(combined);
   }, [files, activeFile]);
 
-  // File type icon
   const getFileIcon = (type: FileType) => {
     switch (type) {
-      case 'html': return <FaHtml5 />;
-      case 'css': return <FaCss3Alt />;
-      case 'js': return <FaJsSquare />;
-      case 'md': return <FaMarkdown />;
-      default: return <span>?</span>;
+      case "html":
+        return <FaHtml5 />;
+      case "css":
+        return <FaCss3Alt />;
+      case "js":
+        return <FaJsSquare />;
+      case "md":
+        return <FaMarkdown />;
+      default:
+        return <span>?</span>;
     }
   };
 
-  // Handle file change in editor
   const handleFileChange = (value: string | undefined) => {
     if (!value) return;
-    setFiles(files.map(file =>
-      file.name === activeFile.name ? { ...file, content: value } : file
-    ));
+    setFiles(
+      files.map((file) =>
+        file.name === activeFile.name ? { ...file, content: value } : file,
+      ),
+    );
   };
 
-  // Handle file sharing
   const handleShare = () => {
     const encoded = encodeURIComponent(JSON.stringify({ files }));
     const url = `${window.location.origin}${window.location.pathname}?project=${encoded}`;
-    navigator.clipboard.writeText(url).then(() => alert('Share URL copied!'));
+    navigator.clipboard.writeText(url).then(() => alert("Share URL copied!"));
   };
 
-  // Delete file
   const handleDeleteFile = (fileName: string) => {
-    const updated = files.filter(f => f.name !== fileName);
+    const updated = files.filter((f) => f.name !== fileName);
     setFiles(updated);
     if (activeFile.name === fileName) setActiveFile(updated[0] || files[0]);
   };
 
-  // Handle file renaming
   const handleRenameFile = (fileName: string) => {
     setRenameFile(fileName);
-    const fileToRename = files.find(f => f.name === fileName);
+    const fileToRename = files.find((f) => f.name === fileName);
     if (fileToRename) setNewFileNameForRename(fileToRename.name);
   };
 
-  // Save renamed file
   const handleSaveRename = () => {
     if (!newFileNameForRename.trim()) return;
-    setFiles(files.map(file =>
-      file.name === renameFile ? { ...file, name: newFileNameForRename } : file
-    ));
+    setFiles(
+      files.map((file) =>
+        file.name === renameFile
+          ? { ...file, name: newFileNameForRename }
+          : file,
+      ),
+    );
     setRenameFile(null);
   };
 
-  // Export files as ZIP
   const handleExport = async () => {
     const zip = new JSZip();
-    files.forEach(f => zip.file(f.name, f.content));
-    const blob = await zip.generateAsync({ type: 'blob' });
+    files.forEach((f) => zip.file(f.name, f.content));
+    const blob = await zip.generateAsync({ type: "blob" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
-    a.download = 'MyWebsite.zip';
+    a.download = "MyWebsite.zip";
     a.click();
     URL.revokeObjectURL(url);
   };
 
-  // Handle embed code generation
   const handleEmbed = () => {
-    const code = `<iframe 
+    const code = `<!-- stack-rush.vercel.app -->
+<iframe 
   src="${window.location.href}"
   style="width: 100%; height: 500px; border: 0; border-radius: 4px; overflow: hidden;"
   title="stack-rush"
   loading="lazy"
-></iframe>`;
+></iframe>
+<!-- stack-rush.vercel.app -->`;
     setEmbedCode(code);
     setShowEmbedModal(true);
   };
 
-  // Handle URL project loading from query params
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const project = params.get('project');
+    const project = params.get("project");
     if (project) {
       try {
         const { files: loaded } = JSON.parse(decodeURIComponent(project));
         setFiles(loaded);
         setActiveFile(loaded[0]);
       } catch (err) {
-        console.error('Invalid shared project:', err);
+        console.error("Invalid shared project:", err);
       }
     }
   }, []);
 
-  // Add sashRender prop
   const sashRender = (_index: number, active: boolean) => {
-    return <div className={`sash ${active ? 'active' : ''}`} />;
+    return <div className={`sash ${active ? "active" : ""}`} />;
   };
 
   return (
     <div className="app-container">
-      <div className="theme-switcher" style={{ padding: '8px', textAlign: 'right' }}>
-        <label>Welcome to Stack Rush!&nbsp;</label>
-        <select value={theme} onChange={(e) => setTheme(e.target.value)}>
-          <option value="vs-dark">Dark</option>
-          <option value="light">Light</option>
-        </select>
-      </div>
+          <div
+            className="theme-switcher"
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              padding: "8px",
+            }}
+          >
+            <a
+              className="github-button"
+              href="https://github.com/sudo-self/stack-rush"
+              data-color-scheme="no-preference: light; light: light; dark: light_high_contrast;"
+              data-icon="octicon-star"
+              data-show-count="false"
+              aria-label="Star sudo-self/stack-rush on GitHub"
+            >
+              Star
+            </a>
 
-      <SplitPane split="vertical" sizes={sizes} onChange={setSizes} sashRender={sashRender}>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              <label style={{ fontWeight: "500" }}>stack-rush.vercel.app</label>
+              <select
+                value={theme}
+                onChange={(e) => setTheme(e.target.value)}
+                style={{
+                  padding: "4px 8px",
+                  borderRadius: "4px",
+                  border: "1px solid #ccc",
+                }}
+              >
+                <option value="vs-dark">Dark</option>
+                <option value="light">Light</option>
+              </select>
+            </div>
+          </div>
+
+
+
+      <SplitPane
+        split="vertical"
+        sizes={sizes}
+        onChange={setSizes}
+        sashRender={sashRender}
+      >
         <div className="files-panel">
           <h2>Project Files</h2>
-          {files.map(file => (
+          {files.map((file) => (
             <div
               key={file.name}
-              className={`file-item ${file.name === activeFile.name ? 'active' : ''}`}
+              className={`file-item ${file.name === activeFile.name ? "active" : ""}`}
               onClick={() => setActiveFile(file)}
             >
               {renameFile === file.name ? (
@@ -204,12 +254,29 @@ function App() {
                 </div>
               ) : (
                 <>
-                  <span className="file-name" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span
+                    className="file-name"
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                    }}
+                  >
                     {getFileIcon(file.type)} {file.name}
                   </span>
                   <div className="file-actions">
-                    <button onClick={() => handleRenameFile(file.name)} className="rename-btn">Rename</button>
-                    <button onClick={() => handleDeleteFile(file.name)} className="delete-btn">Delete</button>
+                    <button
+                      onClick={() => handleRenameFile(file.name)}
+                      className="rename-btn"
+                    >
+                      Rename
+                    </button>
+                    <button
+                      onClick={() => handleDeleteFile(file.name)}
+                      className="delete-btn"
+                    >
+                      Delete
+                    </button>
                   </div>
                 </>
               )}
@@ -217,7 +284,12 @@ function App() {
           ))}
         </div>
 
-        <SplitPane split="vertical" sizes={[60, 40]} onChange={setSizes} sashRender={sashRender}>
+        <SplitPane
+          split="vertical"
+          sizes={[60, 40]}
+          onChange={setSizes}
+          sashRender={sashRender}
+        >
           <div className="editor-panel">
             <Editor
               height="100%"
@@ -228,17 +300,43 @@ function App() {
               options={{
                 minimap: { enabled: false },
                 fontSize: 14,
-                wordWrap: 'on',
+                wordWrap: "on",
                 padding: { top: 30 },
               }}
             />
           </div>
           <div className="preview-panel">
-            <div className="button-panel">
-              <button className="action-button" onClick={handleShare}>Share</button>
-              <button className="action-button" onClick={handleExport}>Export</button>
-              <button className="action-button" onClick={handleEmbed}>Embed</button>
-            </div>
+          <div className="button-panel">
+            <button className="action-button" onClick={handleShare}>
+              Share
+            </button>
+            <button className="action-button" onClick={handleExport}>
+              Export
+            </button>
+            <button className="action-button" onClick={handleEmbed}>
+              Embed
+            </button>
+
+          <img
+            src="./src/assets/react.svg"
+            alt="React Logo"
+            style={{
+              width: "30px",
+              marginLeft: "10px",
+              verticalAlign: "middle",
+            }}
+          />
+          <img
+            src="./src/assets/typescript.svg"
+            alt="TypeScript Logo"
+            style={{
+              width: "30px",
+              marginLeft: "10px",
+              verticalAlign: "middle",
+            }}
+          />
+
+          </div>
             <iframe
               srcDoc={preview}
               title="preview"
@@ -253,14 +351,29 @@ function App() {
       {showEmbedModal && (
         <div className="modal-overlay">
           <div className="modal-content">
-            <h2>Embed Code</h2>
+            <h2>Embed HTML</h2>
             <textarea
               readOnly
               value={embedCode}
-              style={{ width: '100%', height: '150px', padding: '8px', borderRadius: '4px', fontFamily: 'monospace' }}
+              style={{
+                width: "100%",
+                height: "150px",
+                padding: "8px",
+                borderRadius: "4px",
+                fontFamily: "monospace",
+              }}
             />
             <div className="button-container">
               <button onClick={() => setShowEmbedModal(false)}>Close</button>
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(embedCode).then(() => {
+                    alert("Embed code copied to clipboard!");
+                  });
+                }}
+              >
+                Copy
+              </button>
             </div>
           </div>
         </div>
@@ -270,4 +383,3 @@ function App() {
 }
 
 export default App;
-
