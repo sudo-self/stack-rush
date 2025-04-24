@@ -7,10 +7,10 @@ import "./App.css";
 import { marked } from "marked";
 import { FaHtml5, FaCss3Alt, FaJsSquare, FaMarkdown } from "react-icons/fa";
 
-// File types
+// types
 type FileType = "html" | "css" | "js" | "md";
 
-// File interface
+
 interface File {
   name: string;
   content: string;
@@ -47,51 +47,53 @@ function App() {
   const [isDragging, setIsDragging] = useState(false);
 
 
-  useEffect(() => {
-    const html = files.find((f) => f.type === "html")?.content || "";
-    const css = files.find((f) => f.type === "css")?.content || "";
-    const js = files.find((f) => f.type === "js")?.content || "";
-    const md = files.find((f) => f.type === "md")?.content || "";
+    useEffect(() => {
+      const htmlContent = files.find((f) => f.type === "html")?.content || "";
+      const cssContent = files.find((f) => f.type === "css")?.content || "";
+      const jsContent = files.find((f) => f.type === "js")?.content || "";
+      const mdContent = files.find((f) => f.type === "md")?.content || "";
 
-    let combined = "";
+      let combined = "";
 
-    if (activeFile.type === "md") {
-      combined = `
-        <!DOCTYPE html>
-        <html>
-          <head>
-            <meta charset="UTF-8" />
-            <script src="https://cdn.tailwindcss.com"></script>
-            <style>
-              body { font-family: sans-serif; padding: 20px; }
-              h1, h2, h3, h4, h5, h6 { font-weight: bold; margin-top: 1em; }
-              pre { background: #f3f4f6; padding: 10px; border-radius: 6px; }
-              code { background: #e5e7eb; padding: 2px 4px; border-radius: 4px; }
-            </style>
-          </head>
-          <body>
-            ${marked(md)}
-          </body>
-        </html>
-      `;
-    } else {
-      combined = `
-        <!DOCTYPE html>
-        <html>
-          <head>
-            <script src="https://cdn.tailwindcss.com"></script>
-            <style>${css}</style>
-          </head>
-          <body>
-            ${html}
-            <script>${js}</script>
-          </body>
-        </html>
-      `;
-    }
+      if (activeFile.type === "md") {
+        combined = `
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <meta charset="UTF-8" />
+              <script src="https://cdn.tailwindcss.com"></script>
+              <style>
+                body { font-family: sans-serif; padding: 20px; }
+                h1, h2, h3, h4, h5, h6 { font-weight: bold; margin-top: 1em; }
+                pre { background: #f3f4f6; padding: 10px; border-radius: 6px; }
+                code { background: #e5e7eb; padding: 2px 4px; border-radius: 4px; }
+              </style>
+            </head>
+            <body>
+              ${marked(mdContent)}
+            </body>
+          </html>
+        `;
+      } else {
+        combined = `
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <meta charset="UTF-8" />
+              <script src="https://cdn.tailwindcss.com"></script>
+              <style>${cssContent}</style>
+            </head>
+            <body>
+              ${htmlContent}
+              <script>${jsContent}</script>
+            </body>
+          </html>
+        `;
+      }
 
-    setPreview(combined);
-  }, [files, activeFile]);
+      setPreview(combined);
+    }, [files, activeFile]);
+
 
   const getFileIcon = (type: FileType) => {
     switch (type) {
@@ -433,5 +435,4 @@ function App() {
 }
 
 export default App;
-
 
