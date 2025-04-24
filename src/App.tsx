@@ -200,8 +200,8 @@ function App() {
             }}
           >
           <img
-            src="/vite.svg"
-            alt="favicon"
+            src="/Computer.svg"
+            alt="computer"
             style={{
               width: "30px",
               marginLeft: "10px",
