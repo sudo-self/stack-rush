@@ -9,7 +9,6 @@ import { FaHtml5, FaCss3Alt, FaJsSquare, FaMarkdown } from "react-icons/fa";
 import CloudflareDeployButton from "./CloudflareDeployButton";
 import URLOpener from './URLopener';
 
-// types
 type FileType = "html" | "css" | "js" | "md";
 
 interface File {
@@ -107,8 +106,6 @@ function App() {
   const [embedCode, setEmbedCode] = useState("");
   const [renameFile, setRenameFile] = useState<string | null>(null);
   const [newFileNameForRename, setNewFileNameForRename] = useState<string>("");
-  const [theme, setTheme] = useState("vs-dark");
-  const [isDragging, setIsDragging] = useState(false);
   const [showDeployModal, setShowDeployModal] = useState(false);
 
   useEffect(() => {
@@ -254,7 +251,7 @@ function App() {
         {/* File List Panel */}
         <div>
           {files.map((file) => (
-            <div key={file.name} onClick={() => setActiveFile(file)}>
+            <div key={file.name} onClick={() => setActiveFile(file)} style={{ cursor: "pointer", padding: "4px" }}>
               {getFileIcon(file.type)} {file.name}
             </div>
           ))}
@@ -262,14 +259,14 @@ function App() {
         </div>
 
         {/* Editor + Preview */}
-        <SplitPane split="vertical" sizes={[60, 40]} onChange={setSizes}>
+        <SplitPane split="vertical" sizes={[60, 40]} onChange={setSizes} sashRender={sashRender}>
           <div>
             <Editor
               height="100%"
               defaultLanguage={activeFile.type}
               value={activeFile.content}
               onChange={handleFileChange}
-              theme={theme}
+              theme="vs-dark"
               options={{
                 minimap: { enabled: false },
                 fontSize: 14,
@@ -279,25 +276,39 @@ function App() {
             />
           </div>
           <div>
-            <div>
+            <div style={{ marginBottom: "8px" }}>
               <button onClick={handleShare}>Share</button>
-              <button onClick={handleExport}>Export</button>
-              <button onClick={handleEmbed}>Embed</button>
+              <button onClick={handleExport} style={{ marginLeft: "8px" }}>Export</button>
+              <button onClick={handleEmbed} style={{ marginLeft: "8px" }}>Embed</button>
             </div>
-            <iframe srcDoc={preview} sandbox="allow-scripts" width="100%" height="100%" />
+            <iframe srcDoc={preview} sandbox="allow-scripts" width="100%" height="100%" title="preview" />
           </div>
         </SplitPane>
       </SplitPane>
 
       {showDeployModal && <CloudflareDeployButton onClose={() => setShowDeployModal(false)} />}
       {showEmbedModal && (
-        <div className="modal-overlay">
-          <div className="modal-content">
+        <div className="modal-overlay" style={{
+          position: "fixed",
+          top: 0, left: 0, right: 0, bottom: 0,
+          backgroundColor: "rgba(0,0,0,0.5)",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          zIndex: 9999,
+        }}>
+          <div style={{ backgroundColor: "white", padding: "1rem", borderRadius: "6px", width: "90%", maxWidth: "600px" }}>
             <h2>Embed HTML</h2>
-            <textarea readOnly value={embedCode} />
-            <div>
+            <textarea
+              readOnly
+              value={embedCode}
+              style={{ width: "100%", height: "150px", padding: "8px", fontFamily: "monospace", borderRadius: "4px" }}
+            />
+            <div style={{ marginTop: "8px", display: "flex", justifyContent: "flex-end", gap: "8px" }}>
               <button onClick={() => setShowEmbedModal(false)}>Close</button>
-              <button onClick={() => navigator.clipboard.writeText(embedCode)}>Copy</button>
+              <button onClick={() => {
+                navigator.clipboard.writeText(embedCode).then(() => alert("Embed code copied!"));
+              }}>Copy</button>
             </div>
           </div>
         </div>
