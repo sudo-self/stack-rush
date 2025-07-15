@@ -1,4 +1,4 @@
-keep this exact code, all you doing is adding  the html in by default, code: import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Editor from "@monaco-editor/react";
 import SplitPane from "split-pane-react";
 import JSZip from "jszip";
