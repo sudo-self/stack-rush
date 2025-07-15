@@ -9,10 +9,8 @@ import { FaHtml5, FaCss3Alt, FaJsSquare, FaMarkdown } from "react-icons/fa";
 import CloudflareDeployButton from "./CloudflareDeployButton";
 import URLOpener from './URLopener';
 
-
 // types
 type FileType = "html" | "css" | "js" | "md";
-
 
 interface File {
   name: string;
@@ -24,21 +22,84 @@ function App() {
   const [files, setFiles] = useState<File[]>([
     {
       name: "index.html",
-      content: '<div class="hello">web.JesseJesse.com</div>',
       type: "html",
+      content: `<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tailwind CDN Demo</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: 'class' }
+  </script>
+  <style>
+    .hello {
+      color: #8a2be2;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body class="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100 min-h-screen p-6 space-y-6 transition-colors duration-300">
+  <nav class="flex items-center justify-between p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
+    <h1 class="text-xl font-bold">Tailwind CSS Demo</h1>
+    <button onclick="document.documentElement.classList.toggle('dark')"
+      class="bg-gray-800 text-white dark:bg-white dark:text-black px-4 py-2 rounded hover:opacity-80 transition">
+      Toggle Dark Mode
+    </button>
+  </nav>
+
+  <h2 class="text-center text-2xl font-semibold">Text Style Examples in HTML</h2>
+
+  <div class="text-red-500 text-lg p-4">This text is styled with Tailwind CDN.</div>
+  <div class="hello text-lg p-4">This text is styled with external file 'style.css'</div>
+  <div class="text-lg p-4"><p style="color:green">This text is styled inline with HTML</p></div>
+  <div><h2>This text has no CSS applied</h2></div>
+
+  <div class="p-4 rounded-xl text-white text-center bg-gradient-to-r from-purple-500 via-pink-500 to-red-500">
+    This div has a gradient background (left to right).
+  </div>
+
+  <div class="p-4 rounded-lg bg-blue-200 hover:bg-blue-400 transition duration-300">
+    Hover over me to change the background color.
+  </div>
+
+  <button class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded shadow-md hover:shadow-lg transition-all duration-300">
+    Tailwind Button
+  </button>
+
+  <div class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-blue-500">
+    Gradient Text Example
+  </div>
+
+  <a
+    href="https://tailwindcss.com"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="fixed bottom-6 right-6 bg-pink-600 text-white p-4 rounded-full shadow-lg hover:bg-pink-700 transition-all flex items-center justify-center"
+  >
+    Action
+  </a>
+</body>
+</html>`,
     },
-    { name: "styles.css", content: ".hello { color: blue; }", type: "css" },
+    {
+      name: "styles.css",
+      content: `.hello { color: #8a2be2; font-weight: bold; }`,
+      type: "css",
+    },
     {
       name: "script.js",
-      content: 'console.log("web.JesseJesse.com");',
+      content: `console.log("web.JesseJesse.com");`,
       type: "js",
     },
     {
       name: "README.md",
-      content: "\n\n# Export ZIP for a ready-to-deploy website",
+      content: "# Export ZIP for a ready-to-deploy website",
       type: "md",
     },
   ]);
+
   const [activeFile, setActiveFile] = useState<File>(files[0]);
   const [sizes, setSizes] = useState<number[]>([20, 40, 40]);
   const [preview, setPreview] = useState<string>("");
@@ -48,80 +109,59 @@ function App() {
   const [newFileNameForRename, setNewFileNameForRename] = useState<string>("");
   const [theme, setTheme] = useState("vs-dark");
   const [isDragging, setIsDragging] = useState(false);
-  const [showDeployModal, setShowDeployModal] = useState(false)
+  const [showDeployModal, setShowDeployModal] = useState(false);
 
+  useEffect(() => {
+    const htmlContent = files.find((f) => f.type === "html")?.content || "";
+    const cssContent = files.find((f) => f.type === "css")?.content || "";
+    const jsContent = files.find((f) => f.type === "js")?.content || "";
+    const mdContent = files.find((f) => f.type === "md")?.content || "";
 
-    useEffect(() => {
-      const htmlContent = files.find((f) => f.type === "html")?.content || "";
-      const cssContent = files.find((f) => f.type === "css")?.content || "";
-      const jsContent = files.find((f) => f.type === "js")?.content || "";
-      const mdContent = files.find((f) => f.type === "md")?.content || "";
+    let combined = "";
 
-      let combined = "";
-
-      if (activeFile.type === "md") {
-        combined = `
-          <!DOCTYPE html>
-                <!-- stack-rush -->
-          <html>
-            <head>
-              <meta charset="UTF-8" />
-              <script src="https://cdn.tailwindcss.com"></script>
-              <style>
-                body { font-family: sans-serif; padding: 20px; }
-                h1, h2, h3, h4, h5, h6 { font-weight: bold; margin-top: 1em; }
-                pre { background: #f3f4f6; padding: 10px; border-radius: 6px; }
-                code { background: #e5e7eb; padding: 2px 4px; border-radius: 4px; }
-              </style>
-            </head>
-            <body>
-              ${marked(mdContent)}
-            </body>
-          </html>
-        `;
-      } else {
-        combined = `
-          <!DOCTYPE html>
-        <!-- stack-rush -->
-          <html>
-            <head>
-              <meta charset="UTF-8" />
-              <script src="https://cdn.tailwindcss.com"></script>
-              <style>${cssContent}</style>
-            </head>
-            <body>
-              ${htmlContent}
-              <script>${jsContent}</script>
-            </body>
-          </html>
-        `;
-      }
-
-      setPreview(combined);
-    }, [files, activeFile]);
-
-
-  const getFileIcon = (type: FileType) => {
-    switch (type) {
-      case "html":
-        return <FaHtml5 />;
-      case "css":
-        return <FaCss3Alt />;
-      case "js":
-        return <FaJsSquare />;
-      case "md":
-        return <FaMarkdown />;
-      default:
-        return <span>?</span>;
+    if (activeFile.type === "md") {
+      combined = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="UTF-8" />
+          <script src="https://cdn.tailwindcss.com"></script>
+          <style>
+            body { font-family: sans-serif; padding: 20px; }
+            h1, h2, h3 { font-weight: bold; margin-top: 1em; }
+            pre { background: #f3f4f6; padding: 10px; border-radius: 6px; }
+            code { background: #e5e7eb; padding: 2px 4px; border-radius: 4px; }
+          </style>
+        </head>
+        <body>${marked(mdContent)}</body>
+      </html>
+      `;
+    } else {
+      combined = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="UTF-8" />
+          <script src="https://cdn.tailwindcss.com"></script>
+          <style>${cssContent}</style>
+        </head>
+        <body>
+          ${htmlContent}
+          <script>${jsContent}</script>
+        </body>
+      </html>
+      `;
     }
-  };
+
+    setPreview(combined);
+  }, [files, activeFile]);
 
   const handleFileChange = (value: string | undefined) => {
     if (!value) return;
     setFiles(
       files.map((file) =>
-        file.name === activeFile.name ? { ...file, content: value } : file,
-      ),
+        file.name === activeFile.name ? { ...file, content: value } : file
+      )
     );
   };
 
@@ -149,8 +189,8 @@ function App() {
       files.map((file) =>
         file.name === renameFile
           ? { ...file, name: newFileNameForRename }
-          : file,
-      ),
+          : file
+      )
     );
     setRenameFile(null);
   };
@@ -166,26 +206,14 @@ function App() {
     a.click();
     URL.revokeObjectURL(url);
   };
-    
-    const handleEmbed = () => {
-   
-      const encoded = encodeURIComponent(JSON.stringify({ files }));
-      const projectUrl = `${window.location.origin}${window.location.pathname}?project=${encoded}`;
 
-      const code = `<!-- web.JesseJesse.com -->
-      <iframe 
-        src="${projectUrl}"
-        style="width: 100%; height: 500px; border: 0; border-radius: 4px; overflow: hidden;"
-        title="stack-rush"
-        loading="lazy"
-      ></iframe>
-      <!-- web.JesseJesse.com -->`;
-      
-      setEmbedCode(code);
-      setShowEmbedModal(true);
-    };
-
-
+  const handleEmbed = () => {
+    const encoded = encodeURIComponent(JSON.stringify({ files }));
+    const projectUrl = `${window.location.origin}${window.location.pathname}?project=${encoded}`;
+    const code = `<iframe src="${projectUrl}" style="width:100%;height:500px;border:0;" loading="lazy"></iframe>`;
+    setEmbedCode(code);
+    setShowEmbedModal(true);
+  };
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -201,168 +229,41 @@ function App() {
     }
   }, []);
 
-  const sashRender = (_index: number, active: boolean) => {
-    return <div className={`sash ${active ? "active" : ""}`} />;
+  const getFileIcon = (type: FileType) => {
+    switch (type) {
+      case "html":
+        return <FaHtml5 />;
+      case "css":
+        return <FaCss3Alt />;
+      case "js":
+        return <FaJsSquare />;
+      case "md":
+        return <FaMarkdown />;
+      default:
+        return <span>?</span>;
+    }
   };
+
+  const sashRender = (_index: number, active: boolean) => (
+    <div className={`sash ${active ? "active" : ""}`} />
+  );
 
   return (
     <div className="app-container">
-          <div
-            className="theme-switcher"
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              padding: "8px",
-            }}
-          >
-          <img
-            src="/Computer.svg"
-            alt="computer"
-            style={{
-              width: "30px",
-              marginLeft: "10px",
-              verticalAlign: "middle",
-            }}
-          />
-
-            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-              <label style={{ fontWeight: "500" }}>web.JesseJesse.com</label>
-              <select
-                value={theme}
-                onChange={(e) => setTheme(e.target.value)}
-                style={{
-                  padding: "4px 8px",
-                  borderRadius: "4px",
-                  border: "1px solid #ccc",
-                }}
-              >
-                <option value="vs-dark">Dark</option>
-                <option value="light">Light</option>
-              </select>
+      <SplitPane split="vertical" sizes={sizes} onChange={setSizes} sashRender={sashRender}>
+        {/* File List Panel */}
+        <div>
+          {files.map((file) => (
+            <div key={file.name} onClick={() => setActiveFile(file)}>
+              {getFileIcon(file.type)} {file.name}
             </div>
-          </div>
-
-
-
-      <SplitPane
-        split="vertical"
-        sizes={sizes}
-        onChange={setSizes}
-        sashRender={sashRender}
-      >
-          <div
-            className={`files-panel ${isDragging ? "dragging" : ""}`}
-            onDragOver={(e) => {
-              e.preventDefault();
-              setIsDragging(true);
-            }}
-            onDragLeave={() => setIsDragging(false)}
-            onDrop={async (e) => {
-              e.preventDefault();
-              setIsDragging(false);
-              const droppedFiles = Array.from(e.dataTransfer.files);
-
-              for (const file of droppedFiles) {
-                const extension = file.name.split(".").pop()?.toLowerCase();
-                const type = extension as FileType;
-
-                if (!["html", "css", "js", "md"].includes(type)) {
-                  alert(`Unsupported file type: ${file.name}`);
-                  continue;
-                }
-
-                const text = await file.text();
-                setFiles((prev) => [
-                  ...prev,
-                  {
-                    name: file.name,
-                    content: text,
-                    type: type as FileType,
-                  },
-                ]);
-              }
-            }}
-          >
-
-            <h2><button onClick={() => setShowDeployModal(true)}>Deploy Button Generator</button></h2>
-          <div
-            className="drag-drop-zone"
-            style={{
-              border: "2px dashed #999",
-              padding: "1rem",
-              marginBottom: "1rem",
-              textAlign: "center",
-              borderRadius: "8px",
-              backgroundColor: isDragging ? "#f0f0f0" : "transparent",
-              transition: "background-color 0.2s ease",
-            }}
-          >
-            + Add Files
-          </div>
-          <div>
-        
-          </div>
-
-            {files.map((file) => (
-              <div
-                key={file.name}
-                className={`file-item ${file.name === activeFile.name ? "active" : ""}`}
-                onClick={() => setActiveFile(file)}
-              >
-                {renameFile === file.name ? (
-                  <div className="rename-input">
-                    <input
-                      type="text"
-                      value={newFileNameForRename}
-                      onChange={(e) => setNewFileNameForRename(e.target.value)}
-                    />
-                    <button onClick={handleSaveRename}>Save</button>
-                  </div>
-                ) : (
-                  <>
-                    <span
-                      className="file-name"
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "8px",
-                      }}
-                    >
-                      {getFileIcon(file.type)} {file.name}
-                    </span>
-                    <div className="file-actions">
-                      <button
-                        onClick={() => handleRenameFile(file.name)}
-                        className="rename-btn"
-                      >
-                        Rename
-                      </button>
-                      <button
-                        onClick={() => handleDeleteFile(file.name)}
-                        className="delete-btn"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </>
-                )}
-              </div>
-            ))}
-        
+          ))}
           <URLOpener />
-          </div>
-          
-  
-    
-         
-        <SplitPane
-          split="vertical"
-          sizes={[60, 40]}
-          onChange={setSizes}
-          sashRender={sashRender}
-        >
-          <div className="editor-panel">
+        </div>
+
+        {/* Editor + Preview */}
+        <SplitPane split="vertical" sizes={[60, 40]} onChange={setSizes}>
+          <div>
             <Editor
               height="100%"
               defaultLanguage={activeFile.type}
@@ -377,86 +278,35 @@ function App() {
               }}
             />
           </div>
-          <div className="preview-panel">
-          <div className="button-panel">
-            <button className="action-button" onClick={handleShare}>
-              Share
-            </button>
-            <button className="action-button" onClick={handleExport}>
-              Export
-            </button>
-            <button className="action-button" onClick={handleEmbed}>
-              Embed
-            </button>
-         
-
-          <img
-            src="/react.svg"
-            alt="React Logo"
-            style={{
-              width: "30px",
-              marginLeft: "10px",
-              verticalAlign: "middle",
-            }}
-          />
-          <img
-            src="/typescript.svg"
-            alt="TypeScript Logo"
-            style={{
-              width: "30px",
-              marginLeft: "10px",
-              verticalAlign: "middle",
-            }}
-          />
-          </div>
-            <iframe
-              srcDoc={preview}
-              title="preview"
-              sandbox="allow-scripts"
-              width="100%"
-              height="100%"
-            />
+          <div>
+            <div>
+              <button onClick={handleShare}>Share</button>
+              <button onClick={handleExport}>Export</button>
+              <button onClick={handleEmbed}>Embed</button>
+            </div>
+            <iframe srcDoc={preview} sandbox="allow-scripts" width="100%" height="100%" />
           </div>
         </SplitPane>
       </SplitPane>
+
       {showDeployModal && <CloudflareDeployButton onClose={() => setShowDeployModal(false)} />}
       {showEmbedModal && (
         <div className="modal-overlay">
           <div className="modal-content">
             <h2>Embed HTML</h2>
-            <textarea
-              readOnly
-              value={embedCode}
-              style={{
-                width: "100%",
-                height: "150px",
-                padding: "8px",
-                borderRadius: "4px",
-                fontFamily: "monospace",
-              }}
-            />
-            <div className="button-container">
+            <textarea readOnly value={embedCode} />
+            <div>
               <button onClick={() => setShowEmbedModal(false)}>Close</button>
-              <button
-                onClick={() => {
-                  navigator.clipboard.writeText(embedCode).then(() => {
-                    alert("Embed code copied to clipboard!");
-                  });
-                }}
-              >
-                Copy
-              </button>
+              <button onClick={() => navigator.clipboard.writeText(embedCode)}>Copy</button>
             </div>
           </div>
-     
         </div>
       )}
     </div>
-    
-
   );
 }
 
 export default App;
+
 
 
