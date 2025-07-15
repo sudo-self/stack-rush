@@ -22,7 +22,7 @@ function App() {
     {
       name: "index.html",
       type: "html",
-      content: `<!DOCTYPE html>
+      content: <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
   <meta charset="UTF-8" />
@@ -75,17 +75,17 @@ function App() {
     Action
   </a>
 </body>
-</html>`,
+</html>,
     },
     {
       name: "styles.css",
       type: "css",
-      content: `.hello { color: #8a2be2; font-weight: bold; }`,
+      content: .hello { color: #8a2be2; font-weight: bold; },
     },
     {
       name: "script.js",
       type: "js",
-      content: `console.log("web.JesseJesse.com");`,
+      content: console.log("web.JesseJesse.com");,
     },
     {
       name: "README.md",
@@ -109,13 +109,13 @@ function App() {
 
     const result =
       activeFile.type === "md"
-        ? `<!DOCTYPE html><html><head><meta charset="UTF-8" />
+        ? <!DOCTYPE html><html><head><meta charset="UTF-8" />
           <script src="https://cdn.tailwindcss.com"></script>
           <style>body { font-family: sans-serif; padding: 20px; }</style>
-          </head><body>${marked(md)}</body></html>`
-        : `<!DOCTYPE html><html><head><meta charset="UTF-8" />
+          </head><body>${marked(md)}</body></html>
+        : <!DOCTYPE html><html><head><meta charset="UTF-8" />
           <script src="https://cdn.tailwindcss.com"></script>
-          <style>${css}</style></head><body>${html}<script>${js}</script></body></html>`;
+          <style>${css}</style></head><body>${html}<script>${js}</script></body></html>;
 
     setPreview(result);
   }, [files, activeFile]);
@@ -131,7 +131,7 @@ function App() {
 
   const handleShare = () => {
     const encoded = encodeURIComponent(JSON.stringify({ files }));
-    const url = `${window.location.origin}${window.location.pathname}?project=${encoded}`;
+    const url = ${window.location.origin}${window.location.pathname}?project=${encoded};
     navigator.clipboard.writeText(url).then(() => alert("Share URL copied!"));
   };
 
@@ -149,9 +149,9 @@ function App() {
 
   const handleEmbed = () => {
     const encoded = encodeURIComponent(JSON.stringify({ files }));
-    const projectUrl = `${window.location.origin}${window.location.pathname}?project=${encoded}`;
+    const projectUrl = ${window.location.origin}${window.location.pathname}?project=${encoded};
     setEmbedCode(
-      `<iframe src="${projectUrl}" style="width:100%;height:500px;border:0;" loading="lazy"></iframe>`
+      <iframe src="${projectUrl}" style="width:100%;height:500px;border:0;" loading="lazy"></iframe>
     );
     setShowEmbedModal(true);
   };
@@ -186,7 +186,7 @@ function App() {
   };
 
   const sashRender = (_index: number, active: boolean) => (
-    <div className={`sash ${active ? "active" : ""}`} />
+    <div className={sash ${active ? "active" : ""}} />
   );
 
   return (
