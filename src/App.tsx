@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+keep this exact code, all you doing is adding  the html in by default, code: import { useState, useEffect } from "react";
 import Editor from "@monaco-editor/react";
 import SplitPane from "split-pane-react";
 import JSZip from "jszip";
@@ -27,51 +27,34 @@ function App() {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Edit Text Style</title>
+  <title>Tailwind CDN Demo</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = { darkMode: 'class' }
-  </script>
+  <script>tailwind.config = { darkMode: 'class' }</script>
   <style>
-    .hello {
-      color: #25b387;
-      font-weight: bold;
-    }
+    .hello { color: #8a2be2; font-weight: bold; }
   </style>
 </head>
 <body class="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100 min-h-screen p-6 space-y-6 transition-colors duration-300">
-
-  <nav class="flex items-center justify-between p-4 bg-gray-100 dark:bg-cyan-800 rounded-lg">
-    <h1 class="text-xl font-bold">Tailwind CDN</h1>
+  <nav class="flex items-center justify-between p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
+    <h1 class="text-xl font-bold">Tailwind CSS Demo</h1>
     <button onclick="document.documentElement.classList.toggle('dark')"
       class="bg-gray-800 text-white dark:bg-white dark:text-black px-4 py-2 rounded hover:opacity-80 transition">
-      Dark Mode Toggle
+      Toggle Dark Mode
     </button>
   </nav>
 
-  <h2 class="text-center text-indigo-300 text-2xl font-semibold">Edit Text Styles with CSS</h2>
+  <h2 class="text-center text-2xl font-semibold">Text Style Examples in HTML</h2>
 
-  <div class="text-red-500 text-lg p-4">
-    This text is styled with Tailwind CDN.
-  </div>
-
-  <div class="hello text-lg p-4 font-">
-    This text is styled with external ./style.css
-  </div>
-
-  <div class="text-lg p-4">
-    <p style="color:yellow">This text is styled inline with HTML</p>
-  </div>
-
-  <div>
-    <h2>This text has no CSS applied</h2>
-  </div>
+  <div class="text-red-500 text-lg p-4">This text is styled with Tailwind CDN.</div>
+  <div class="hello text-lg p-4">This text is styled with external file 'style.css'</div>
+  <div class="text-lg p-4"><p style="color:green">This text is styled inline with HTML</p></div>
+  <div><h2>This text has no CSS applied</h2></div>
 
   <div class="p-4 rounded-xl text-white text-center bg-gradient-to-r from-purple-500 via-pink-500 to-red-500">
-    This div has a gradient background left to right.
+    This div has a gradient background (left to right).
   </div>
 
-  <div class="p-4 rounded-lg bg-indigo-500 hover:bg-orange-500 transition duration-300">
+  <div class="p-4 rounded-lg bg-blue-200 hover:bg-blue-400 transition duration-300">
     Hover over me to change the background color.
   </div>
 
@@ -83,13 +66,21 @@ function App() {
     Gradient Text Example
   </div>
 
+  <a
+    href="https://tailwindcss.com"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="fixed bottom-6 right-6 bg-pink-600 text-white p-4 rounded-full shadow-lg hover:bg-pink-700 transition-all flex items-center justify-center"
+  >
+    Action
+  </a>
 </body>
 </html>`,
     },
     {
       name: "styles.css",
       type: "css",
-      content: `.hello { color: #25b387; font-weight: bold; }`,
+      content: `.hello { color: #8a2be2; font-weight: bold; }`,
     },
     {
       name: "script.js",
@@ -119,12 +110,12 @@ function App() {
     const result =
       activeFile.type === "md"
         ? `<!DOCTYPE html><html><head><meta charset="UTF-8" />
-            <script src="https://cdn.tailwindcss.com"></script>
-            <style>body { font-family: sans-serif; padding: 20px; }</style>
+          <script src="https://cdn.tailwindcss.com"></script>
+          <style>body { font-family: sans-serif; padding: 20px; }</style>
           </head><body>${marked(md)}</body></html>`
         : `<!DOCTYPE html><html><head><meta charset="UTF-8" />
-            <script src="https://cdn.tailwindcss.com"></script>
-            <style>${css}</style></head><body>${html}<script>${js}</script></body></html>`;
+          <script src="https://cdn.tailwindcss.com"></script>
+          <style>${css}</style></head><body>${html}<script>${js}</script></body></html>`;
 
     setPreview(result);
   }, [files, activeFile]);
@@ -270,7 +261,65 @@ function App() {
   );
 }
 
-export default App;
+export default App;  html: <!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Edit Text Style</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // Enable dark mode via class strategy
+    tailwind.config = {
+      darkMode: 'class'
+    }
+  </script>
+  <style>
+    .hello {
+      color: #8a2be2;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body class="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100 min-h-screen p-6 space-y-6 transition-colors duration-300">
+     </script>  <style>    .hello {      color: #25b387;      font-weight: bold;    \}  </style></head> <body class="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100 min-h-screen p-6 space-y-6 transition-colors duration-300"> 
+
+  <nav class="flex items-center justify-between p-4 bg-gray-100 dark:bg-cyan-800 rounded-lg">
+    <h1 class="text-xl font-bold">Tailwind CDN</h1>
+    <button onclick="document.documentElement.classList.toggle('dark')"
+      class="bg-gray-800 text-white dark:bg-white dark:text-black px-4 py-2 rounded hover:opacity-80 transition">
+     Dark Mode Toggle
+    </button>
+  </nav>
+
+  <h2 class="text-center text-indigo-300 text-2xl font-semibold">Edit Text Styles with CSS</h2>
+  <p>
+  <div class="text-red-500 text-lg p-4">
+    This text is styled with Tailwind CDN.
+  </div>
+  <div class="hello text-lg p-4 font-">
+    This text is styled with external ./style.css
+  </div>
+  <div class="text-lg p-4">
+    <p style="color:yellow">This text is styled inline with HTML</p>
+  </div>
+  <div>
+    <h2>This text has no CSS applied</h2>
+  </div>
+  <div class="p-4 rounded-xl text-white text-center bg-gradient-to-r from-purple-500 via-pink-500 to-red-500">
+    This div has a gradient background left to right.
+  </div>
+  <div class="p-4 rounded-lg bg-indigo-500 hover:bg-orange-500 transition duration-300">
+    Hover over me to change the background color.
+  </div>
+  <button class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded shadow-md hover:shadow-lg transition-all duration-300">
+    Tailwind Button
+  </button>
+  <div class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-blue-500">
+    Gradient Text Example
+  </div>
+</body>
+</html>
 
 
 
